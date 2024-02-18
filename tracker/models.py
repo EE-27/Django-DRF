@@ -19,7 +19,7 @@ class Habit(models.Model):
 
     enjoyable = models.BooleanField(default=False, verbose_name="Enjoyable")
 
-    reward = models.CharField(max_length=512, verbose_name="Reward")
+    reward = models.BooleanField(default=False, verbose_name="Reward")
 
     linked_habit = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
                                      related_name='linked_habits', verbose_name="Linked Habit")
