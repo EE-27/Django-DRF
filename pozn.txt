@@ -1,0 +1,16 @@
+ubuntu:
+1512 >>> python manage.py csu
+1512 >>> python manage.py cu
+admin a Harry potter
+1531 >>> python manage.py cu
+Dutch
+
+{
+    "place": "Outdoor",
+    "time": "10:00",
+    "habit_name":"Running",
+    "activity": "You shoudl go for a run!",
+    "periodicity": 2,
+    "time_to_complete": 60,
+    "user": 2
+}

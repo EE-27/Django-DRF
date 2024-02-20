@@ -24,9 +24,10 @@ class Habit(models.Model):
     linked_habit = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
                                      related_name='linked_habits', verbose_name="Linked Habit")
 
+    initial_date = models.DateField(default="2024-02-20", verbose_name="Initial date")
     periodicity = models.PositiveSmallIntegerField(verbose_name="Periodicity")
     time_to_complete = models.PositiveIntegerField(verbose_name="Time to complete")
-    public = models.BooleanField(default=False, verbose_name="Public")
+    public = models.BooleanField(default=True, verbose_name="Public")
 
     def __str__(self):
         return f'I, {self.user}, will {self.habit_name} at {self.time} in {self.place}'

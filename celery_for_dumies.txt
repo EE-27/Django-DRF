@@ -1,0 +1,30 @@
+run Redis - >>> redis-server  pip install redis
+
+1. terminal == python manage.py runserver
+2. terminal == celery -A config worker -l info
+3. terminal == celery -A config beat -l info
+
+########################
+### <APP_NAME>/tasks.py ###
+
+from celery import Celery
+
+app = Celery('<APP_NAME>', broker='redis://localhost:6379/0')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+@app.task
+def print_hello_world():
+    print("Hello, World!")
+
+##########################
+### config/settings.py ###
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
+CELERY_BEAT_SCHEDULE = {
+    "print-hello-world": {
+        "task": '<APP_NAME>.tasks.print_hello_world',
+        'schedule': 15.0,  ### time edit here ###
+    },
+}

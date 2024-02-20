@@ -168,8 +168,8 @@ CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
 CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
 
 CELERY_BEAT_SCHEDULE = {
-    "print-hello-world": {
-        "task": 'school.tasks.print_hello_world',
-        'schedule': 1.0,
+    "schedule_habit_notifications": {
+        "task": 'tracker.tasks.schedule_habit_notifications',
+        'schedule': 15.0,
     },
 }
