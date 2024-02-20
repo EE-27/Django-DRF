@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import datetime
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -152,3 +153,23 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+
+CACHE_ENABLED = True
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/",  # nezapomenout si zpustit redis-server
+        }
+    }
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
+CELERY_BEAT_SCHEDULE = {
+    "print-hello-world": {
+        "task": 'school.tasks.print_hello_world',
+        'schedule': 1.0,
+    },
+}
