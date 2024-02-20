@@ -140,10 +140,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         "rest_framework.permissions.AllowAny"
-        # AllowAny - teď to pustí všechny
 
-        # 'rest_framework.permissions.IsAuthenticated',
-    ]  # v Postman, teď všechno chce: v Headers napsat: Authorization: Bearer <<access_token>> z /users/api/token/
+    ]
 }
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',

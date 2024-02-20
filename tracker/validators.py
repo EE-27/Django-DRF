@@ -10,7 +10,7 @@ class PlaceValidator:
 
     def __call__(self, value):
         place = value.get(self.field)
-        if place not in ("Indoor", "Outdoor"):
+        if place is not None and place not in ("Indoor", "Outdoor"):
             raise serializers.ValidationError(f"{place} not a correct place. It has to be Indoor or Outdoor")
 
 
@@ -23,7 +23,7 @@ class TimeToCompleteValidator:
 
     def __call__(self, value):
         time_to_complete = value.get(self.field)
-        if time_to_complete > 120:
+        if time_to_complete is not None and time_to_complete > 120:
             raise serializers.ValidationError("No more than 120 seconds!")
 
 
@@ -36,7 +36,7 @@ class PeriodicityValidator:
 
     def __call__(self, value):
         periodicity = value.get(self.field)
-        if periodicity > 7:
+        if periodicity is not None and periodicity > 7:
             raise serializers.ValidationError("Maximally on weekly rotation!")
 
 
