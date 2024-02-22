@@ -1,0 +1,103 @@
+from telegram import Update
+from telegram.ext import ContextTypes, Application, CommandHandler, MessageHandler, filters
+
+from commands import start_command, pkmn_command, stop_command
+
+from api import token as bot_token
+
+TOKEN = bot_token
+BOT_USERNAME = "@drf_ee27_bot"
+
+start_command_used = False
+
+
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /start
+    """
+    global start_command_used
+    if start_command_used:
+        await update.message.reply_text("I am already started")
+
+    else:
+        start_command_used = True
+        await update.message.reply_text("Hello, I am DRF bot")
+
+
+async def pkmn_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /pkmn
+    """
+    global start_command_used
+    if start_command_used:
+
+        IMAGE_DIRECTORY = "pkmn"
+        PKMN_IMAGES = os.listdir(IMAGE_DIRECTORY)
+        POKEMONS = [file for file in PKMN_IMAGES]  # if file.endswith(('.jpg', '.png', '.gif'))
+
+        RANDOM_PKMN = random.choice(POKEMONS)
+
+        IMAGE_PATH = os.path.join(IMAGE_DIRECTORY, RANDOM_PKMN)
+        with open(IMAGE_PATH, "rb") as pkmn:
+            await update.message.reply_photo(photo=pkmn, caption=F"{str(RANDOM_PKMN).strip('.png').capitalize()}")
+
+
+async def stop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /stop
+    """
+    global start_command_used
+    if start_command_used:
+        start_command_used = False
+        await update.message.reply_text("Good Bye")
+
+
+def handle_response(text):
+    formatted = text.lower()
+    if "hi" in formatted:
+        return "And peace be with you, my friend"
+
+    return "I dont understando..."
+
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global start_command_used
+    if not start_command_used:
+        return
+
+    message_type: str = update.message.chat.type
+    text = update.message.text
+
+    if message_type == "group":
+        if BOT_USERNAME in text:
+            print(f"User ({update.message.chat.id}) in {message_type}: '{text}'")
+            new_text: str = text.replace(BOT_USERNAME, '').strip()
+            response: str = handle_response(new_text)
+        else:
+            return
+    else:
+        print(f"User ({update.message.chat.username}) in {message_type}: '{text}'")
+        response = handle_response(text)
+
+    print(f"{BOT_USERNAME}: '{response}'")
+    await update.message.reply_text(response)
+
+
+async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(f"Update {update} had error {context.error}")
+
+
+if __name__ == "__main__":
+    print("Starting")
+    app = Application.builder().token(TOKEN).build()
+
+    # COMMANDS
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("pkmn", pkmn_command))
+    app.add_handler(CommandHandler("stop", stop_command))
+
+    app.add_handler(MessageHandler(filters.TEXT, handle_message))
+
+    app.add_error_handler(error)
+    print("Polling")
+    app.run_polling(poll_interval=1)
